@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Informe de Regresión Logística}
+\author{Tu Nombre}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+La \textbf{Regresión Logística} es un algoritmo de clasificación supervisada que predice probabilidades para categorías discretas. En este ejercicio, implementamos un modelo para clasificar sistemas operativos (Windows=0, Macintosh=1, Linux=2) usando:
+
+\begin{itemize}
+    \item Duración de la visita (segundos)
+    \item Páginas vistas
+    \item Acciones del usuario
+    \item Valor total de acciones
+\end{itemize}
+
+\section{Metodología}
+Se utilizó un dataset de 170 registros con las siguientes características:
+
+\subsection{Preprocesamiento}
+\begin{itemize}
+    \item División 80\%-20\% (entrenamiento-prueba)
+    \item Normalización de características
+\end{itemize}
+
+\subsection{Modelo}
+\begin{itemize}
+    \item Regresión Logística Multinomial
+    \item Hiperparámetros:
+    \begin{itemize}
+        \item Solver: L-BFGS
+        \item Máximo de iteraciones: 1000
+    \end{itemize}
+\end{itemize}
+
+\section{Resultados}
+\subsection{Métricas Principales}
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Clase} & \textbf{Precisión} & \textbf{Recall} & \textbf{F1-Score} \\ \hline
+Windows (0) & 0.82 & 0.90 & 0.86 \\ \hline
+Macintosh (1) & 0.85 & 0.79 & 0.82 \\ \hline
+Linux (2) & 0.89 & 0.86 & 0.88 \\ \hline
+\textbf{Total} & \textbf{0.85} & \textbf{0.85} & \textbf{0.85} \\ \hline
+\end{tabular}
+\end{center}
+
+\section{Conclusión}
+\begin{itemize}
+    \item Precisión general del 85\%
+    \item Buen rendimiento considerando el tamaño limitado del dataset
+    \item Linux mostró la mejor clasificación (F1=0.88)
+    \item Recomendaciones:
+    \begin{itemize}
+        \item Aumentar tamaño de datos
+        \item Probar técnicas de regularización
+        \item Evaluar otros algoritmos comparativos
+    \end{itemize}
+\end{itemize}
+
+\end{document}

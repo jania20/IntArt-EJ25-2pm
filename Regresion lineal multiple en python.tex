@@ -1,0 +1,162 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{siunitx}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Informe de Regresión Lineal Múltiple en Python}
+\author{Tu Nombre}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+La \textbf{Regresión Lineal} es un algoritmo de \textit{Machine Learning} supervisado utilizado para modelar la relación entre una variable dependiente (objetivo) y una o más variables independientes (predictoras). Su objetivo es encontrar una función lineal que mejor se ajuste a los datos, permitiendo predecir valores futuros.
+
+En este ejercicio, se extiende el modelo de \textbf{Regresión Lineal Simple} a \textbf{Regresión Lineal Múltiple}, incorporando dos variables predictoras:
+\begin{itemize}
+    \item \textbf{Word count} (cantidad de palabras)
+    \item \textbf{Suma de enlaces, comentarios e imágenes} (como segunda variable)
+\end{itemize}
+
+La ecuación general para $n$ variables predictoras es:
+\begin{equation}
+    Y = b + m_1 X_1 + m_2 X_2 + \dots + m_n X_n
+    \label{eq:regresion}
+\end{equation}
+donde:
+\begin{itemize}
+    \item $Y$: Variable objetivo (\# Shares)
+    \item $b$: Término de intersección (bias)
+    \item $m_i$: Coeficientes de las variables predictoras $X_i$
+\end{itemize}
+
+\section{Metodología}
+\subsection{Preparación de Datos}
+Se utilizó un conjunto de datos que incluye:
+\begin{itemize}
+    \item \textbf{Variables predictoras}:
+    \begin{itemize}
+        \item \texttt{Word count} (palabras)
+        \item Suma de \texttt{\# of Links}, \texttt{\# of comments} (rellenados con 0 si eran NaN) y \texttt{\# Images video}
+    \end{itemize}
+    \item \textbf{Variable objetivo}: \texttt{\# Shares} (compartidas en redes sociales)
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption=Preparación de datos]
+import pandas as pd
+import numpy as np
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Creación de la segunda variable predictiva
+suma = filtered_data["# of Links"] + filtered_data['# of comments'].fillna(0) + filtered_data['# Images video']
+
+# DataFrame con las 2 variables predictoras
+dataX2 = pd.DataFrame()
+dataX2["Word count"] = filtered_data["Word count"]
+dataX2["suma"] = suma
+
+# Conversión a arrays para el modelo
+XY_train = np.array(dataX2)
+z_train = filtered_data['# Shares'].values
+\end{lstlisting}
+
+\subsection{Entrenamiento del Modelo}
+Se aplicó la regresión lineal múltiple utilizando \texttt{sklearn.linear\_model.LinearRegression()}.
+
+\begin{lstlisting}[language=Python, caption=Entrenamiento del modelo]
+# Creación y entrenamiento del modelo
+regr2 = linear_model.LinearRegression()
+regr2.fit(XY_train, z_train)
+
+# Predicciones
+z_pred = regr2.predict(XY_train)
+
+# Métricas
+print('Coefficients: \n', regr2.coef_)
+print("Mean squared error: %.2f" % mean_squared_error(z_train, z_pred))
+print('Variance score: %.2f' % r2_score(z_train, z_pred))
+\end{lstlisting}
+
+\section{Resultados}
+\subsection{Coeficientes del Modelo}
+\begin{itemize}
+    \item \textbf{Coeficientes}:
+    \begin{itemize}
+        \item \texttt{Word count}: $6.63$ (impacto positivo en las comparticiones)
+        \item \texttt{suma}: $-483.41$ (impacto negativo, posiblemente por ruido en los datos)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Métricas de Evaluación}
+\begin{itemize}
+    \item \textbf{Error Cuadrático Medio (MSE)}: \num{352122816.48} (alto, indica grandes discrepancias)
+    \item \textbf{Puntaje de Varianza ($R^2$)}: $0.11$ (muy bajo; el modelo explica solo el 11\% de la variabilidad)
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{grafico_resultados.png}
+    \caption{Relación entre variables predictoras y objetivo}
+    \label{fig:resultados}
+\end{figure}
+
+\textbf{Interpretación}:
+\begin{itemize}
+    \item El modelo tiene un \textbf{ajuste pobre} debido a la baja correlación entre las variables predictoras y el target (ver Figura~\ref{fig:resultados})
+    \item La segunda variable (\texttt{suma}) podría introducir ruido o no ser relevante para predecir \texttt{\# Shares}
+\end{itemize}
+
+\section{Conclusión}
+\begin{enumerate}
+    \item \textbf{Limitaciones del Modelo}:
+    \begin{itemize}
+        \item El bajo $R^2$ ($0.11$) sugiere que las variables predictoras no explican adecuadamente las variaciones
+        \item La alta magnitud del MSE (\num{352122816.48}) indica que las predicciones son inexactas
+    \end{itemize}
+    
+    \item \textbf{Recomendaciones}:
+    \begin{itemize}
+        \item \textbf{Reducción de dimensionalidad}: Aplicar técnicas como \textbf{PCA} para extraer características más significativas
+        \item \textbf{Ingeniería de características}: Probar otras combinaciones de variables o transformaciones (ej.: logarítmicas)
+        \item \textbf{Modelos alternativos}: Evaluar algoritmos no lineales (ej.: Random Forest, Gradient Boosting) si la relación no es lineal
+    \end{itemize}
+    
+    \item \textbf{Lección aprendida}:
+    La regresión lineal múltiple es útil para explorar relaciones multivariadas, pero su efectividad depende críticamente de la \textbf{calidad y relevancia} de los datos de entrada, como se demostró en este análisis.
+\end{enumerate}
+
+\end{document}

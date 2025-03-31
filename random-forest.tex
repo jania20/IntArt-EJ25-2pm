@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    frame=single,
+    breaklines=true
+}
+
+\title{Actividad Random Forest}
+\author{Jania Moreno}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+\textbf{Random Forest} es un algoritmo de aprendizaje supervisado basado en \textbf{ensamble de árboles de decisión}. Su importancia radica en:
+\begin{itemize}
+    \item Alta precisión incluso sin ajuste fino de hiperparámetros.
+    \item Resistencia al \textit{overfitting} gracias a la aleatoriedad en la construcción de árboles.
+    \item Aplicable tanto a clasificación como a regresión.
+\end{itemize}
+
+\section{Metodología}
+\subsection{Pasos realizados}
+\begin{enumerate}
+    \item Carga de datos: Dataset \texttt{creditcard.csv} con transacciones fraudulentas.
+    \item Balanceo con SMOTE (para manejar desbalanceo de clases).
+    \item Entrenamiento con 100 árboles y validación out-of-bag (\texttt{oob\_score}).
+    \item Evaluación mediante matriz de confusión y métricas F1-score.
+\end{enumerate}
+
+\subsection{Código clave}
+\begin{lstlisting}
+# Configuración del modelo
+model = RandomForestClassifier(
+    n_estimators=100,
+    max_features='sqrt',
+    oob_score=True,
+    random_state=42
+)
+\end{lstlisting}
+
+\section{Resultados}
+\begin{itemize}
+    \item \textbf{Precisión global}: 99.8\% (mejor que regresión logística).
+    \item \textbf{Recall para fraude (clase 1)}: 0.92 (detección efectiva).
+    \item \textbf{Importancia de características}: \texttt{V14} y \texttt{V17} fueron las más relevantes.
+\end{itemize}
+
+\section{Conclusión}
+\begin{itemize}
+    \item Random Forest superó a modelos básicos en detección de fraudes.
+    \item La aleatoriedad (\texttt{bootstrap}) mejora la generalización.
+    \item Desventaja: Mayor tiempo de entrenamiento vs. árboles individuales.
+\end{itemize}
+
+\end{document}

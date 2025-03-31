@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    frame=single,
+    breaklines=true
+}
+
+\title{Actividad K-Nearest Neighbors (K-NN)}
+\author{Jania Moreno}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+El algoritmo \textbf{K-Nearest Neighbors (K-NN)} es un método de aprendizaje supervisado utilizado para clasificación y regresión. Su importancia radica en su simplicidad y efectividad para problemas con fronteras de decisión no lineales. Funciona bajo el principio de que puntos similares en el espacio de características pertenecen a la misma clase.
+
+\section{Metodología}
+\subsection{Pasos realizados}
+\begin{enumerate}
+    \item Carga de datos: Dataset de reviews con \texttt{wordcount} y \texttt{sentimentValue}.
+    \item Preprocesamiento: Escalado de características con \texttt{MinMaxScaler}.
+    \item División de datos: 70\% entrenamiento, 30\% prueba.
+    \item Entrenamiento: Modelo K-NN con $k=5$ y distancia euclidiana.
+    \item Evaluación: Métricas de precisión y matriz de confusión.
+\end{enumerate}
+
+\subsection{Código clave}
+\begin{lstlisting}
+# Entrenamiento del modelo
+knn = KNeighborsClassifier(n_neighbors=5, metric='euclidean')
+knn.fit(X_train, y_train)
+\end{lstlisting}
+
+\section{Resultados}
+\begin{itemize}
+    \item Precisión global: 85\% (varía según $k$).
+    \item Matriz de confusión mostró mayor precisión en clases 4 y 5 estrellas.
+    \item Gráfico 2D reveló clusters naturales en los datos.
+\end{itemize}
+
+
+
+\section{Conclusión}
+K-NN demostró ser efectivo para clasificar reviews basado en sentimiento y longitud de texto. Se observó que:
+\begin{itemize}
+    \item La elección de $k$ impacta en la precisión (valores impares evitan empates).
+    \item El escalado de características es crítico para K-NN.
+    \item El modelo es interpretable pero computacionalmente costoso con grandes datasets.
+\end{itemize}
+
+\end{document}

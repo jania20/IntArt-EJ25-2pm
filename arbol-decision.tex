@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    frame=single,
+    breaklines=true
+}
+
+\title{Actividad Árbol de Decisión}
+\author{Tu Nombre}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+Un \textbf{Árbol de Decisión} es un algoritmo de aprendizaje supervisado que:
+\begin{itemize}
+    \item Divide recursivamente los datos en subconjuntos mediante reglas basadas en características.
+    \item Es interpretable visualmente (flujo tipo diagrama).
+    \item Maneja datos categóricos y numéricos.
+\end{itemize}
+En este ejercicio predecimos si un artista alcanzará el \#1 en Billboard usando atributos musicales.
+
+\section{Metodología}
+\subsection{Pasos realizados}
+\begin{enumerate}
+    \item Carga y limpieza de datos: Codificación de categorías y manejo de valores nulos.
+    \item Balanceo implícito con \texttt{class\_weight='balanced'}.
+    \item Entrenamiento con profundidad máxima=3 para evitar overfitting.
+    \item Evaluación con métricas de clasificación binaria.
+\end{enumerate}
+
+\subsection{Código clave}
+\begin{lstlisting}
+# Modelo con balanceo de clases
+model = DecisionTreeClassifier(
+    max_depth=3,
+    class_weight='balanced'
+)
+\end{lstlisting}
+
+\section{Resultados}
+\begin{itemize}
+    \item \textbf{Precisión global}: 78\% (mejor en clase mayoritaria "No Top1").
+    \item \textbf{Recall para Top1}: 0.65 (detección aceptable de éxitos).
+    \item \textbf{Característica más importante}: \texttt{artist\_type} (género del artista).
+\end{itemize}
+
+
+
+\section{Conclusión}
+\begin{itemize}
+    \item El árbol identifica patrones claros (ej: artistas masculinos urbanos tienen más probabilidad de éxito).
+    \item Limitación: Profundidad reducida sacrifica precisión por interpretabilidad.
+    \item Aprendizaje: Los datos desbalanceados requieren ajustes como \texttt{class\_weight}.
+\end{itemize}
+
+\end{document}
